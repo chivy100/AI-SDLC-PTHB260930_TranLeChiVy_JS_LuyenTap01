@@ -1,4 +1,8 @@
 # NHẬT KÝ PROMPT AI-DRIVEN - ĐỀ LUYỆN TẬP SỐ 01
+**Sinh viên:** Trần Lê Chí Vỹ  
+**Lớp:** AI-SDLC-PTHB260930  
+**GitHub:** [chivy100](https://github.com/chivy100)  
+**Repository:** `AI-SDLC-PTHB260930_TranLeChiVy_JS_LuyenTap01`  
 **Môn học:** Lập trình JavaScript cơ bản (AI-Driven)  
 **Đề bài:** Ứng dụng Quản lý công việc (Todo List)  
 **Thời gian hoàn thành:** 90 phút  
