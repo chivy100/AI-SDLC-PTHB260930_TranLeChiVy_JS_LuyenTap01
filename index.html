@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ứng dụng quản lý công việc Todo List thông minh, theo dõi hạn chót và thống kê hiệu suất học tập dành cho sinh viên.">
+  <title>Quản Lý Công Việc - Todo List</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Tiêu đề chính -->
+    <header class="app-header">
+      <div class="badge-title">Học tập & Làm việc</div>
+      <h1 class="main-title">===== TODO LIST =====</h1>
+      <p class="subtitle">Ứng dụng ghi chú và quản lý công việc dành cho sinh viên</p>
+    </header>
+
+    <!-- Khu vực thông báo phản hồi (Thêm/Sửa/Xóa thành công hoặc thông báo hệ thống) -->
+    <div id="notification-bar" class="notification-bar" role="alert" aria-live="polite"></div>
+
+    <!-- VÙNG 1: Form Thêm / Cập nhật công việc -->
+    <section class="section-card form-section" aria-label="Thêm và chỉnh sửa công việc">
+      <form id="todo-form" class="todo-form" novalidate>
+        <input type="hidden" id="editing-id" value="">
+        
+        <div class="form-row">
+          <!-- Nhập tên công việc -->
+          <div class="form-group title-group">
+            <label for="todo-title" class="sr-only">Tên công việc</label>
+            <input 
+              type="text" 
+              id="todo-title" 
+              name="title" 
+              placeholder="Nhập tên công việc..." 
+              autocomplete="off"
+            >
+            <!-- Thông báo lỗi kiểm tra tên công việc -->
+            <div id="title-error" class="error-message" role="alert"></div>
+          </div>
+
+          <!-- Chọn mức ưu tiên -->
+          <div class="form-group priority-group">
+            <label for="todo-priority" class="sr-only">Mức ưu tiên</label>
+            <select id="todo-priority" name="priority">
+              <option value="thap">Ưu tiên Thấp</option>
+              <option value="trung-binh" selected>Ưu tiên Trung bình</option>
+              <option value="cao">Ưu tiên Cao</option>
+            </select>
+          </div>
+
+          <!-- Chọn hạn chót -->
+          <div class="form-group deadline-group">
+            <label for="todo-deadline" class="sr-only">Hạn chót</label>
+            <input 
+              type="date" 
+              id="todo-deadline" 
+              name="deadline"
+            >
+          </div>
+
+          <!-- Nút Thao tác (Thêm / Lưu / Hủy) -->
+          <div class="form-group button-group">
+            <button type="submit" id="btn-submit" class="btn btn-primary">
+              <span id="btn-submit-text">Thêm</span>
+            </button>
+            <button type="button" id="btn-cancel" class="btn btn-secondary btn-cancel hidden">
+              Hủy
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- VÙNG 2: Tìm kiếm & Bộ lọc -->
+    <section class="section-card search-filter-section" aria-label="Tìm kiếm và bộ lọc">
+      <div class="search-box">
+        <label for="search-input" class="search-label">Tìm:</label>
+        <div class="search-input-wrapper">
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Tìm theo tên công việc..." 
+            autocomplete="off"
+          >
+          <button type="button" id="btn-clear-search" class="btn-clear-search hidden" title="Xóa tìm kiếm">&times;</button>
+        </div>
+      </div>
+
+      <div class="filter-group" role="tablist" aria-label="Bộ lọc công việc">
+        <button type="button" class="btn-filter active" data-filter="all">Tất cả</button>
+        <button type="button" class="btn-filter" data-filter="pending">Đang làm</button>
+        <button type="button" class="btn-filter" data-filter="done">Đã xong</button>
+        <button type="button" class="btn-filter" data-filter="overdue">Quá hạn</button>
+      </div>
+    </section>
+
+    <!-- VÙNG 3: Danh sách công việc -->
+    <section class="section-card list-section" aria-label="Danh sách công việc">
+      <div class="list-wrapper">
+        <ul id="todo-list" class="todo-list">
+          <!-- Các mục công việc sẽ được render tại đây -->
+        </ul>
+      </div>
+      <!-- Thông báo khi danh sách rỗng hoặc không có kết quả -->
+      <div id="empty-state" class="empty-state hidden">
+        <p id="empty-message">Chưa có công việc nào</p>
+      </div>
+    </section>
+
+    <!-- VÙNG 4: Thống kê & Nút thao tác hàng loạt -->
+    <footer class="section-card footer-section" aria-label="Thống kê và thao tác hoàn thành">
+      <div class="stats-bar">
+        <span class="stat-item">Còn <strong id="stat-pending">0</strong> việc chưa xong</span>
+        <span class="stat-divider">|</span>
+        <span class="stat-item">Hoàn thành <strong id="stat-percent">0%</strong></span>
+        <span class="stat-divider">|</span>
+        <span class="stat-item">Quá hạn: <strong id="stat-overdue">0</strong></span>
+      </div>
+
+      <div class="action-footer">
+        <button type="button" id="btn-delete-completed" class="btn btn-danger-outline">
+          Xóa các việc đã xong
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
